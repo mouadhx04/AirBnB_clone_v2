@@ -41,12 +41,12 @@ class FileStorage:
             returns a dictionary of __object
         """
         objs = self.__objects
-        print("cls -> {}".format(cls))
+        cls_r = {}
         if cls and cls.__name__ in classes:
             for key in objs.keys():
-                print("key - > {}, cls -> {}".format(key, cls))
                 if cls.__name__ in key.split("."):
-                    return objs
+                    cls_r.update({key: objs[key]})
+            return cls_r
         return objs
 
     def new(self, obj):
