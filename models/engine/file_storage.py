@@ -20,8 +20,17 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    def all(self):
-        """returns a dictionary
+    ### To Do:
+    ### Method for def delete
+    ### Update method for def all (function name updated with cls=None)
+
+    def delete(self, obj=None):
+        """deletes obj from __objects if it’s inside
+        """
+        pass
+
+    def all(self, cls=None)
+        """ returns the list of objects of one type of class
         Return:
             returns a dictionary of __object
         """
