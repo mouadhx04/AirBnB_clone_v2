@@ -9,6 +9,14 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
+classes = {"BaseModel": BaseModel,
+           "Amenity": Amenity,
+           "City": City,
+           "Place": Place,
+           "Review": Review,
+           "State": State,
+           "User": User}
+
 
 class FileStorage:
     """This class serializes instances to a JSON file and
@@ -20,21 +28,26 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    # To Do:
-    # Method for def delete
-    # Update method for def all (function name updated with cls=None)
-
     def delete(self, obj=None):
         """deletes obj from __objects if it’s inside
         """
-        pass
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            del self.__objects[key]
 
     def all(self, cls=None):
         """ returns the list of objects of one type of class
         Return:
             returns a dictionary of __object
         """
-        return self.__objects
+        objs = self.__objects
+        print("cls -> {}".format(cls))
+        if cls and cls.__name__ in classes:
+            for key in objs.keys():
+                print("key - > {}, cls -> {}".format(key, cls))
+                if cls.__name__ in key.split("."):
+                    return objs
+        return objs
 
     def new(self, obj):
         """sets __object to given obj
