@@ -15,9 +15,9 @@ class BaseModel:
     """
 
     id = Column(String(60), unique=True, nullable=False, primary_key=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow,
+    created_at = Column(DateTime, default=datetime.utcnow,
                         nullable=False)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow,
+    updated_at = Column(DateTime, default=datetime.utcnow,
                         nullable=False)
 
     def __init__(self, *args, **kwargs):
@@ -38,7 +38,7 @@ class BaseModel:
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = self.updated_at = datetime.now()
+            self.created_at = self.updated_at = datetime.utcnow()
 
     def __str__(self):
         """returns a string

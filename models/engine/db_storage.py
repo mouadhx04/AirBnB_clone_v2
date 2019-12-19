@@ -39,7 +39,7 @@ class DBStorage:
                                               getenv('HBNB_MYSQL_HOST'),
                                               getenv('HBNB_MYSQL_DB')),
                                       pool_pre_ping=True)
-        if getenv('HBNB_ENV') is "test":
+        if getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all()
 
     def all(self, cls=None):
@@ -48,15 +48,19 @@ class DBStorage:
         """
         return_dic = {}
         if cls:
-            query = self.__session.query(cls)
+            query = self.__session.query(cls.__name__).all()
             for obj in query:
-                key = "<{}.{}".format(type(obj).__name__, obj.id)
+                key = "{}.{}".format(type(obj).__name__, obj.id)
                 value = obj
                 return_dic[key] = value
             return return_dic
         else:
-            query = self.__session.query(State, City, Place,
-                                         User, Amenity, Review)
+            query = self.__session.query(State).all()
+            for obj in query:
+                key = "{}.{}".format(type(obj).__name__, obj.id)
+                value = obj
+                return_dic[key] = value
+            return return_dic
 
     def new(self, obj):
         """add the object to the current database session
@@ -79,7 +83,7 @@ class DBStorage:
         creates the current database session (self.__session)
         from the engine (self.__engine)
         """
-        Base.metadata.create_all(__engine)
+        Base.metadata.create_all(self.__engine)
         session_make = sessionmaker(bind=self.__engine, expire_on_commit=False)
         session_scoped = scoped_session(session_make)
         self.__session = session_scoped()
