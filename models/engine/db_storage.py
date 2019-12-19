@@ -57,7 +57,9 @@ class DBStorage:
             return return_dic
         else:
             query = self.__session.query(City).all()
-            query.append(self.__session.query(State).all())
+            city = self.__session.query(State).all()
+            if city != []:
+                query.append(city)
             for obj in query:
                 if "_sa_instance_state" in type(obj).__name:
                     continue
