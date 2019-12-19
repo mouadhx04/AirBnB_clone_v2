@@ -47,6 +47,7 @@ class DBStorage:
         If class not specified, queries all types of objects
         """
         return_dic = {}
+        query = []
         if cls:
             query = self.__session.query(cls.__name__).all()
             for obj in query:
@@ -54,8 +55,10 @@ class DBStorage:
                 return_dic[key] = obj
             return return_dic
         else:
-            query = self.__session.query(City).all()
-            city = self.__session.query(State).all()
+            state = self.__session.query(State).all()
+            if state != []:
+                query.append(state)
+            city = self.__session.query(City).all()
             if city != []:
                 query.append(city)
             for obj in query:
