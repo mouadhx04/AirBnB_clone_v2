@@ -17,6 +17,8 @@ from sqlalchemy.orm import scoped_session
 
 
 # Note: remember to update __init__.py as per task 6 as well
+classes = {"City": City,
+           "State": State}
 
 class DBStorage:
     """This class handles the MySQL database engine
@@ -48,23 +50,12 @@ class DBStorage:
         """
         return_dic = {}
         query = []
-        if cls:
-            query = self.__session.query(cls.__name__).all()
+        for key in classes.keys():
+            query = self.__session.query(classes[key]).all()
             for obj in query:
                 key = "{}.{}".format(type(obj).__name__, obj.id)
                 return_dic[key] = obj
-            return return_dic
-        else:
-            state = self.__session.query(State).all()
-            if state != []:
-                query.append(state)
-            city = self.__session.query(City).all()
-            if city != []:
-                query.append(city)
-            for obj in query:
-                key = "{}.{}".format(type(obj).__name__, obj.id)
-                return_dic[key] = obj
-            return return_dic
+        return return_dic
 
     def new(self, obj):
         """add the object to the current database session
