@@ -2,7 +2,6 @@
 """This is the state class"""
 from models.base_model import BaseModel
 from models.base_model import Base
-from models.city import City
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 """
