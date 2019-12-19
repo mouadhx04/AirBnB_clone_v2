@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-"""create a unique FileStorage instance for your application"""
-from models.engine.file_storage import FileStorage
+"""Selects between FileStorage and DBStorage instance for your application"""
 from models.base_model import BaseModel
+from models.base_model import Base
 from models.user import User
 from models.state import State
 from models.city import City
@@ -10,5 +10,16 @@ from models.place import Place
 from models.review import Review
 
 
-storage = FileStorage()
-storage.reload()
+""" Environment variable 'HBNB_TYPE_STORAGE' acts as a toggle
+"""
+
+if getenv('HBNB_TYPE_STORAGE') is "db":
+
+    from models.engine.db_storage import DBStorage
+    storage = DBStorage()
+    storage.reload()
+
+elif getenv('HBNB_TYPE_STORAGE') is "file":
+    from models.engine.file_storage import FileStorage
+    storage = FileStorage()
+    storage.reload()
