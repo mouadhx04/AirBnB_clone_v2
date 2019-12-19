@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """This is the DBStorage class for AirBnB"""
-import os
-import json
+
 from models.base_model import BaseModel
 from models.base_model import Base
 from models.user import User
@@ -10,26 +9,20 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+
+from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
 
-# TO DO:
-# In __init__ method: Environment variables for self.__engine
-# Code all task requirements for:
-# all method (self.__session called in reload)
-# new method (add object to self.__session)
-# save method (commit changes of self.__session)
-# delete method (delete obj from self.__session)
-# reload method (creates tables, has sessionmaker using scoped_session
 # Note: remember to update __init__.py as per task 6 as well
 
 class DBStorage:
     """This class handles the MySQL database engine
     Attributes:
-        __engine: set to None (task 6)
-        __session: set to None (task 6)
+        __engine: initially set to None, becomes sqlalchemy engine
+        __session: initially set to None, becomes sqlalchemy session
     """
 
     __engine = None
@@ -40,47 +33,53 @@ class DBStorage:
         Attributes:
         engine: links to MySQL database using environment variables
         """
-        self.__engine = create_engine('mysql+mysqldb://{USERNAME}:{PASSWORD}@
-        {HOST}/{DATABASE}', pool_pre_ping=True)
-        # drop all tables if the environment variable HBNB_ENV is equal to test
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
+                                      .format(getenv('HBNB_MYSQL_USER'),
+                                              getenv('HBNB_MYSQL_PWD'),
+                                              getenv('HBNB_MYSQL_HOST'),
+                                              getenv('HBNB_MYSQL_DB')),
+                                      pool_pre_ping=True)
+        if getenv('HBNB_ENV') is "test":
+            Base.metadata.drop_all()
 
     def all(self, cls=None):
         """ Queries current database session for class objects
         If class not specified, queries all types of objects
         """
-        pass
-        # classes = {"Amenity": Amenity,
-        #            "City": City,
-        #            "Place": Place,
-        #            "Review": Review,
-        #            "State": State,
-        #            "User": User}
-
-        # query on the current database session (self.__session) all objects depending of the class name (argument cls)
-        # if cls=None, query all types of objects (User, State, City, Amenity, Place and Review)
-        # this method must return a dictionary: (like FileStorage)
-        # key = <class-name>.<object-id>
-        # value = object
+        return_dic = {}
+        if cls:
+            query = self.__session.query(cls)
+            for obj in query:
+                key = "<{}.{}".format(type(obj).__name__, obj.id)
+                value = obj
+                return_dic[key] = value
+            return return_dic
+        else:
+            query = self.__session.query(State, City, Place,
+                                         User, Amenity, Review)
 
     def new(self, obj):
         """add the object to the current database session
         """
-        pass
+        self.__session.add(obj)
 
     def save(self):
         """ commits all changes of the current database session
         """
-        pass
+        self.__session.commit()
 
     def delete(self, obj=None):
         """ deletes from the current database session obj if not None
         """
-        pass
+        if obj:
+            self.__session.delete(obj)
 
     def reload(self):
         """creates all tables in the database
         creates the current database session (self.__session)
         from the engine (self.__engine)
         """
-        pass
-        # create the current database session (self.__session) from the engine (self.__engine) by using a sessionmaker - the option expire_on_commit must be set to False ; and scoped_session - to make sure your Session is thread-safe
+        Base.metadata.create_all(__engine)
+        session_make = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_scoped = scoped_session(session_make)
+        self.__session = session_scoped()
