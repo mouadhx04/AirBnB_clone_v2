@@ -50,8 +50,6 @@ class DBStorage:
         if cls:
             query = self.__session.query(cls.__name__).all()
             for obj in query:
-                if "_sa_instance_state" in type(obj).__name__:
-                    continue
                 key = "{}.{}".format(type(obj).__name__, obj.id)
                 return_dic[key] = obj
             return return_dic
@@ -61,8 +59,6 @@ class DBStorage:
             if city != []:
                 query.append(city)
             for obj in query:
-                if "_sa_instance_state" in type(obj).__name:
-                    continue
                 key = "{}.{}".format(type(obj).__name__, obj.id)
                 return_dic[key] = obj
             return return_dic
