@@ -50,16 +50,19 @@ class DBStorage:
         if cls:
             query = self.__session.query(cls.__name__).all()
             for obj in query:
+                if "_sa_instance_state" in type(obj).__name__:
+                    continue
                 key = "{}.{}".format(type(obj).__name__, obj.id)
-                value = obj
-                return_dic[key] = value
+                return_dic[key] = obj
             return return_dic
         else:
-            query = self.__session.query(State).all()
+            query = self.__session.query(City).all()
+            query.append(self.__session.query(State).all())
             for obj in query:
+                if "_sa_instance_state" in type(obj).__name:
+                    continue
                 key = "{}.{}".format(type(obj).__name__, obj.id)
-                value = obj
-                return_dic[key] = value
+                return_dic[key] = obj
             return return_dic
 
     def new(self, obj):
