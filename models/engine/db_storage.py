@@ -20,6 +20,7 @@ from sqlalchemy.orm import scoped_session
 classes = {"City": City,
            "State": State}
 
+
 class DBStorage:
     """This class handles the MySQL database engine
     Attributes:
