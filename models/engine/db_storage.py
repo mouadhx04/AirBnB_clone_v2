@@ -20,7 +20,8 @@ from sqlalchemy.orm import scoped_session
 classes = {"City": City,
            "State": State,
            "Place": Place,
-           "User": User}
+           "User": User,
+           "Review": Review}
 
 
 class DBStorage:

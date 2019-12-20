@@ -13,6 +13,8 @@ class User(BaseModel, Base):
         password: password for you login
         first_name: first name
         last_name: last name
+        places: relationship class attribute to Place
+        reviews: relationship class attribute to User
     """
     __tablename__ = "users"
     email = Column(String(128), nullable=False)
@@ -20,3 +22,4 @@ class User(BaseModel, Base):
     first_name = Column(String(128), nullable=False)
     last_name = Column(String(128), nullable=False)
     places = relationship("Place", backref="user")
+    reviews = relationship("Review", backref="user")

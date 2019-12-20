@@ -5,6 +5,7 @@ from models.base_model import Base
 from models.city import City
 from models.user import User
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
+from sqlalchemy.orm import relationship
 
 
 class Place(BaseModel, Base):
@@ -21,6 +22,7 @@ class Place(BaseModel, Base):
         latitude: latitude in flaot
         longitude: longitude in float
         amenity_ids: list of Amenity ids
+        reviews: relationship class attribute to Review
     """
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey(City.id), nullable=False)
@@ -33,3 +35,15 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float)
     longitude = Column(Float)
+    reviews = relationship("Review", backref="place")
+
+    @property
+    def reviews(self):
+        """ Getter
+        """
+        r_v = []
+        objs = storage.all()
+        for key in objs.keys():
+            if key.split(".")[0] == "Review":
+                if key.split(".")[1] == self.id:
+                    r_v.append(objs[key])
