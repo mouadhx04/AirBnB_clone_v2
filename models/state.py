@@ -29,8 +29,10 @@ class State(BaseModel, Base):
     def cities(self):
         """ Getter
         """
-        pass
-        # objects = storage.all(cities)
-        # key = my_list[0] + '.' + my_list[1]
-        # if key in objects:
-        #     print(objects[key])
+        r_v = []
+        objs = storage.all()
+        for key in objs.keys():
+            if key.split(".")[0] == "City":
+                if key.split(".")[1] == self.id:
+                    r_v.append(objs[key])
+        return (r_v)
