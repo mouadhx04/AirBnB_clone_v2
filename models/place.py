@@ -6,8 +6,14 @@ from models.city import City
 from models.user import User
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
+from sqlalchemy import *
 
 
+""" TO-DO:
+     amenities setter needs to be coded
+     check amenities class attribute if backref correct
+     place_amenity instance for Many-to-Many table
+"""
 class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
@@ -23,6 +29,7 @@ class Place(BaseModel, Base):
         longitude: longitude in float
         amenity_ids: list of Amenity ids
         reviews: relationship class attribute to Review
+        amenities: relationship class attribute to Amenity
     """
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey(City.id), nullable=False)
@@ -36,6 +43,27 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship("Review", backref="place")
+    amenities = relationship("Amenity", backref="place",
+                             secondary=place_amenity, viewonly=False)
+
+    @amenities.setter
+    def amenities(self, v):
+        """ Setter
+        """
+        pass
+        """  Setter attribute amenities that handles append method for adding an Amenity.id to the attribute amenity_ids. This method should accept only Amenity object, otherwise, do nothing. """
+
+
+    @property
+    def amenities(self):
+        """ Getter
+        """
+        r_v = []
+        objs = storage.all()
+        for key in objs.keys():
+            if key.split(".")[0] == "Amenity":
+                if key.split(".")[1] == self.id:
+                    r_v.append(objs[key])
 
     @property
     def reviews(self):
