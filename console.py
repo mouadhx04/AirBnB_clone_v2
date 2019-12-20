@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
                     setattr(obj, key, float(value))
                 else:
                     if '"' in value:
-                        value = value.replace('"', '\\"')
+                        value = value[1:-1].replace('"', '\\"')
                     setattr(obj, key, value.replace("_", " "))
             obj.save()
             print("{}".format(obj.id))
