@@ -11,7 +11,7 @@ class Amenity(BaseModel, Base):
     Attributes:
         __tablename__: SQL table
         name: input name
-        place_amenities: class attribute relationship to between Place & Amenity
+        place_amenities: relationship to between Place & Amenity
     """
     __tablename__ = 'amenities'
     name = Column(String(128), nullable=False)
