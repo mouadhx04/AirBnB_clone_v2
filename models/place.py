@@ -58,18 +58,13 @@ class Place(BaseModel, Base):
     reviews = relationship("Review", backref="place")
     amenities = relationship("Amenity", backref="place_amenities",
                              secondary=place_amenity, viewonly=False)
+    amenity_ids = []
 
     @property
     def amenities(self):
         """ Getter
         """
-        from models import storage
-        r_v = []
-        objs = storage.all()
-        for key in objs.keys():
-            if key.split(".")[0] == "Amenity":
-                if key.split(".")[1] == self.id:
-                    r_v.append(objs[key])
+        return self.amenity_ids
 
     @amenities.setter
     def amenities(self, v):
