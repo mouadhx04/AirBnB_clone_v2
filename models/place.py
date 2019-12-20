@@ -50,9 +50,8 @@ class Place(BaseModel, Base):
     def amenities(self, v):
         """ Setter
         """
-        pass
-        """  Setter attribute amenities that handles append method for adding an Amenity.id to the attribute amenity_ids. This method should accept only Amenity object, otherwise, do nothing. """
-
+        if isinstance(v, Amenity):
+            self.amenity_ids.append(v.id)
 
     @property
     def amenities(self):
