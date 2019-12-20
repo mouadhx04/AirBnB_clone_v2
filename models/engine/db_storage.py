@@ -18,7 +18,9 @@ from sqlalchemy.orm import scoped_session
 
 # Note: remember to update __init__.py as per task 6 as well
 classes = {"City": City,
-           "State": State}
+           "State": State,
+           "Place": Place,
+           "User": User}
 
 
 class DBStorage:
