@@ -21,8 +21,7 @@ classes = {"City": City,
            "Place": Place,
            "User": User,
            "Review": Review,
-           "Amenity": Amenity,
-           "BaseModel": BaseModel}
+           "Amenity": Amenity}
 
 
 class DBStorage:
