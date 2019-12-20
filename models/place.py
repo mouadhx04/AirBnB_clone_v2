@@ -4,6 +4,7 @@ from models.base_model import BaseModel
 from models.base_model import Base
 from models.city import City
 from models.user import User
+from models.amenity import Amenity
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy import *
@@ -14,6 +15,16 @@ from sqlalchemy import *
      check amenities class attribute if backref correct
      place_amenity instance for Many-to-Many table
 """
+
+
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60), ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60), ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False)
+)
+
+
 class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
@@ -31,6 +42,7 @@ class Place(BaseModel, Base):
         reviews: relationship class attribute to Review
         amenities: relationship class attribute to Amenity
     """
+
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey(City.id), nullable=False)
     user_id = Column(String(60), ForeignKey(User.id), nullable=False)
@@ -43,15 +55,7 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship("Review", backref="place")
-    amenities = relationship("Amenity", backref="place",
-                             secondary=place_amenity, viewonly=False)
-
-    @amenities.setter
-    def amenities(self, v):
-        """ Setter
-        """
-        if isinstance(v, Amenity):
-            self.amenity_ids.append(v.id)
+    amenities = relationship("Amenity", backref="place_amenities", secondary=place_amenity, viewonly=False)
 
     @property
     def amenities(self):
@@ -63,6 +67,13 @@ class Place(BaseModel, Base):
             if key.split(".")[0] == "Amenity":
                 if key.split(".")[1] == self.id:
                     r_v.append(objs[key])
+
+    @amenities.setter
+    def amenities(self, v):
+        """ Setter
+        """
+        if isinstance(v, Amenity):
+            self.amenity_ids.append(v.id)
 
     @property
     def reviews(self):
