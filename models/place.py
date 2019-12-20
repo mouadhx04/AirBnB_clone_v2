@@ -63,6 +63,7 @@ class Place(BaseModel, Base):
     def amenities(self):
         """ Getter
         """
+        from models import storage
         r_v = []
         objs = storage.all()
         for key in objs.keys():
