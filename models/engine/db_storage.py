@@ -10,7 +10,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
-from os import getenv
+from os import getenv, environ
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
@@ -45,8 +45,8 @@ class DBStorage:
                                               getenv('HBNB_MYSQL_HOST'),
                                               getenv('HBNB_MYSQL_DB')),
                                       pool_pre_ping=True)
-        if getenv('HBNB_ENV') == "test":
-            Base.metadata.drop_all()
+        if getenv('HBNB_ENV') == "test" and 'test' in environ:
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ Queries current database session for class objects
