@@ -3,14 +3,13 @@
 Fabric script based on the file 1-pack_web_static.py that distributes an
 archive to the web servers
 """
-
-from fabric.api import put, run, env
-from os.path import exists
+from fabric.api import *
+from os.path import isdir, exists
 env.hosts = ['35.237.83.200', '34.74.146.14']
 
 
 def do_deploy(archive_path):
-    """distribute an archive to the web servers"""
+    """distributes an archive to the web servers"""
     if exists(archive_path) is False:
         return False
     try:
